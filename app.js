@@ -3807,14 +3807,14 @@ function renderInstallModal(os){
       <div class="os-tab ${os==='desktop'?'on':''}" onclick="snd();renderInstallModal('desktop')">💻 PC</div>
     </div>
     <div style="background:var(--greenl);border:1px solid #86efac;border-radius:var(--r);padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--greend);margin-bottom:12px">
-      ✅ Su <b>GitHub Pages (HTTPS)</b> tutti i dati vengono salvati permanentemente nel browser. Da file locale potrebbe azzerarsi ad ogni apertura.
+      ✅ Su <b>GitHub Pages (HTTPS)</b> tutti i dati vengono salvati permanentemente nel browser, e da Fase 10 l'app funziona anche offline grazie al Service Worker.
     </div>
     ${steps.map(([n,t,s])=>`<div class="install-step"><div class="install-num">${n}</div><div class="install-text">${t}${s?`<small>${s}</small>`:''}</div></div>`).join('')}
     <button class="conf-btn" onclick="closeModal()">✓ HO CAPITO</button>`;
 }
 
 /* ════════ PWA ════════ */
-/* ══ PWA MANIFEST (senza Service Worker per compatibilità GitHub Pages) ══ */
+/* ══ PWA MANIFEST + SERVICE WORKER (Fase 10 — offline reale) ══ */
 (function setupPWA(){
   try{
     function mkIcon(sz){
@@ -3849,11 +3849,13 @@ function renderInstallModal(os){
       const blob=new Blob([JSON.stringify(mf)],{type:'application/manifest+json'});
       mel.href=URL.createObjectURL(blob);
     }
-    // Deregistra eventuali service worker precedenti che causano schermo bianco
+    // Registra il Service Worker (sw.js) — strategia network-first su
+    // HTML/JS: mai serve codice vecchio se la rete risponde, quindi non
+    // può ripresentarsi il bug schermo bianco da cache congelata.
     if('serviceWorker' in navigator){
-      navigator.serviceWorker.getRegistrations().then(function(regs){
-        regs.forEach(function(r){r.unregister();});
-      }).catch(function(){});
+      navigator.serviceWorker.register('./sw.js').catch(function(e){
+        console.warn('[NT] SW registration error:',e);
+      });
     }
   }catch(e){console.warn('[NT] PWA setup error:',e);}
 })();
