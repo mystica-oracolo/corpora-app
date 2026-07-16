@@ -21,6 +21,7 @@
     function ensureExLog(){
       if(!S.exerciseLog)S.exerciseLog={};
     }
+    window.ensureExLog=ensureExLog; // FIX: usata da getVolumeTrend() in CorporaFase2 — causava ReferenceError in Analytics premium
 
     function getLastSession(name){
       ensureExLog();
@@ -386,6 +387,8 @@
       const carbG=Math.max(0,Math.round((kcal-protKcal-fatG*9)/4));
       return{prot:pt.target,fat:fatG,carb:carbG,gKg:pt.gKg};
     }
+    window.getProteinTarget=getProteinTarget; // FIX Fase 8: era locale a questa closure (NutriTrackPRO), mai raggiungibile da Fase 2/4/8
+    window.getMacroTargets=getMacroTargets; // FIX Fase 8: idem
 
     function injectMacroBanner(){
       const old=document.getElementById('nt-macro-banner');
@@ -489,6 +492,7 @@
       if(!S.profile.luogo)S.profile.luogo='Palestra';
       if(!S.checkins)S.checkins=[];
     }
+    window.ensureProfileExt=ensureProfileExt; // FIX Fase 8
 
     /* ────────────────────────────────────────
        2. MOTORE NUTRIZIONALE ESTESO
@@ -504,6 +508,13 @@
     function getWaterTargetBicchieri(){
       return Math.round(getWaterTargetMl()/250);
     }
+    // FIX: getFibreTarget era usata (guardata da typeof, quindi mai un errore visibile) da
+    // Fase 4 per il target fibre dinamico — ma non essendo mai raggiungibile, il fallback
+    // fisso a 28 scattava SEMPRE. Il target fibre "dinamico su kcal" (Sezione 5) non
+    // funzionava mai in pratica. Esposte anche le due funzioni acqua per coerenza/uso futuro.
+    window.getFibreTarget=getFibreTarget;
+    window.getWaterTargetMl=getWaterTargetMl;
+    window.getWaterTargetBicchieri=getWaterTargetBicchieri;
 
     /* Refeed: deficit medio >15% per 3+ settimane consecutive */
     function checkRefeedStatus(){
@@ -566,6 +577,7 @@
       const score=Math.round(macroPct*0.4+workoutPct*0.4+checkinPct*0.2);
       return{score,macroPct,workoutPct,checkinPct,targetSessioni,sessioniFatte:doneDates.size};
     }
+    window.getAdherenceScore=getAdherenceScore; // FIX Fase 8: era locale, mai visibile fuori da questa closure
 
     /* ────────────────────────────────────────
        4. MATCHING SCHEDA ALLENAMENTO
@@ -590,6 +602,8 @@
       });
       return best;
     }
+    window.matchWorkoutPlan=matchWorkoutPlan; // FIX Fase 8: idem — mai visibile fuori da questa closure
+    window.checkRefeedStatus=checkRefeedStatus; // FIX Fase 8: idem, per coerenza — usata da showAdherenceScore internamente ma utile anche fuori
 
     /* ────────────────────────────────────────
        5. SCHERMATA CHECK-IN SETTIMANALE
@@ -762,6 +776,8 @@
       if(S.settings.premium===undefined)S.settings.premium=false;
     }
     function isPremium(){return S.settings.premium===true;}
+    window.ensureFase2State=ensureFase2State; // FIX Fase 8
+    window.isPremium=isPremium; // FIX Fase 8: CorporaFase3 (sync granulare) aspettava questa per sempre
 
     /* ────────────────────────────────────────
        1. COACH AI — MOTORE TRIGGER
@@ -839,6 +855,12 @@
       const wk=isoWeekKey(new Date());
       return (S.aiInsights||[]).filter(i=>isoWeekKey(i.date)===wk).length;
     }
+    // FIX Fase 8: queste erano tutte locali alla closure, mai raggiungibili da fuori
+    window.isoWeekKey=isoWeekKey;
+    window.recordWeeklySnapshot=recordWeeklySnapshot;
+    window.checkPlateau=checkPlateau;
+    window.generateCoachMessage=generateCoachMessage;
+    window.coachMessagesThisWeek=coachMessagesThisWeek;
 
     /* ────────────────────────────────────────
        2. SCHERMATA COACH AI
@@ -954,6 +976,7 @@
       const good=weeks.filter(w=>w.score>=70).length;
       return{pct:Math.round(good/weeks.length*100),weeks:weeks.length,good};
     }
+    window.getConsistencyScore=getConsistencyScore; // FIX Fase 8
 
     function getVolumeTrend(){
       // aggrega volume (peso*serie*rip) per settimana dagli ultimi 8 settimane di exerciseLog

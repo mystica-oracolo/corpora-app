@@ -141,7 +141,12 @@
       const nf=getDB().find(f=>f.id===newFoodId);if(!nf)return;
       it.food=nf;
       saveState();showToast('✅ Sostituito con '+nf.name,'green');closeModal();
-      if(typeof renderPasto==='function')renderPasto(mk);else if(typeof showHome==='function')showHome();
+      // FIX: 'renderPasto' non esiste in nessun file del progetto (probabile refuso) — la
+      // funzione reale è showMeal(mk), richiamata con lo stesso pattern navReplace usato
+      // altrove in app.js dopo una modifica al pasto corrente. Prima di questo fix l'utente
+      // veniva sempre rimandato alla Home invece di restare sul pasto appena modificato.
+      if(typeof navReplace==='function'&&typeof showMeal==='function')navReplace(()=>showMeal(mk,false));
+      else if(typeof showHome==='function')showHome();
     };
 
     // Aggiunge pulsante "Sostituzioni" + messaggio budget residuo nel modal di modifica pasto
