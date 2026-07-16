@@ -1135,6 +1135,9 @@
       const created=await sbRequest('GET','profiles?slug=eq.'+encodeURIComponent(CUR.slug)+'&limit=1');
       return created&&created.length?created[0]:null;
     }
+    // Esposta per riuso da Fase 6 (sync tabelle aggiuntive) — stessa istanza,
+    // evita di duplicare la logica di lookup/creazione riga profilo.
+    window.ensureProfileRow=ensureProfileRow;
 
     async function syncCheckinToBackend(checkin){
       if(!SB.enabled)return;
