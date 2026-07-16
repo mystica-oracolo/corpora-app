@@ -31,7 +31,9 @@ const PRECACHE_URLS = [
   './fase5-motore-allenamento.js',
   './fase6-database.js',
   './fase7-design-system.js',
-  './fase8-kpi-gamification-compliance.js'
+  './fase8-kpi-gamification-compliance.js',
+  './fase9-premium-server.js',
+  './fase11-barcode.js'
 ];
 
 /* ── INSTALL: precache dei file base ── */
