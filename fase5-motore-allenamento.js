@@ -49,7 +49,7 @@
       ppl:['Push A','Pull A','Legs A','Push B','Pull B','Legs B']};
 
     function ensureProfileExt5(){
-      if(!S.profile.durataSessione)S.profile.durataSessione=45;
+      if(!S.profile.durataSessione)S.profile.durataSessione=S.profile.tempoSessione||45;
       if(!S.generatedPlan)S.generatedPlan=null;
       if(!S.setLogs)S.setLogs=[]; // {date,exId,kg,reps,rpe}
     }

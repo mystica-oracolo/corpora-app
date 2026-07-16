@@ -61,7 +61,7 @@ create table if not exists preferenze (
   profile_id uuid primary key references profiles(id) on delete cascade,
   tipo_dieta text,                   -- onnivoro | vegetariano | vegano | altro
   allergie jsonb default '[]',
-  cibi_esclusi jsonb default '[]',
+  cibi_esclusi text,                 -- testo libero (onboarding: "cibi non graditi")
   n_pasti_giorno int,
   updated_at timestamptz default now()
 );

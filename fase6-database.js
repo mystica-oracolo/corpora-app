@@ -61,24 +61,24 @@
       if(!SB.enabled)return;
       ensureFase6State();
       const p=S.profile;
-      const profiloSnap={sesso:p.sesso,eta:p.eta,altezza:p.altezza,pesoObiettivo:p.pesoTarget||p.pesoObiettivo,
+      const profiloSnap={sesso:p.sesso,eta:p.eta,altezza:p.altezza,pesoObiettivo:S.settings.pesoTarget,
         obiettivo:p.obiettivo,attivita:p.attivita,livello:p.livello,giorniSett:p.giorniSett,luogo:p.luogo,
-        durataSessione:p.durataSessione,oreSonno:p.oreSonno,stress:p.stress,motivazione:p.motivazione};
-      const prefSnap={tipoDieta:p.preferenzaAlim,allergie:p.allergie||[],cibiEsclusi:p.cibiEsclusi||[],pastiGiorno:p.pastiGiorno};
+        durataSessione:p.tempoSessione||p.durataSessione,oreSonno:p.oreSonno,stress:p.stress,motivazione:p.motivazione};
+      const prefSnap={tipoDieta:p.preferenzaAlim,allergie:p.allergie||[],cibiNonGraditi:p.cibiNonGraditi||'',pastiGiorno:p.pastiGiorno};
       const h1=hash(profiloSnap),h2=hash(prefSnap);
       if(h1===S._sync6.profiloHash&&h2===S._sync6.prefHash)return;
       try{
         const profile=await getProfileRow();if(!profile)return;
         if(h1!==S._sync6.profiloHash){
           await sbRequest('POST','profilo_dati',{profile_id:profile.id,sesso:p.sesso,eta:p.eta,altezza:p.altezza,
-            peso_obiettivo:p.pesoTarget||p.pesoObiettivo,obiettivo:p.obiettivo,attivita:p.attivita,livello:p.livello,
-            giorni_sett:p.giorniSett,luogo:p.luogo,durata_sessione:p.durataSessione,ore_sonno:p.oreSonno,
+            peso_obiettivo:S.settings.pesoTarget,obiettivo:p.obiettivo,attivita:p.attivita,livello:p.livello,
+            giorni_sett:p.giorniSett,luogo:p.luogo,durata_sessione:p.tempoSessione||p.durataSessione,ore_sonno:p.oreSonno,
             stress:p.stress,motivazione:p.motivazione});
           S._sync6.profiloHash=h1;
         }
         if(h2!==S._sync6.prefHash){
           await sbRequest('POST','preferenze',{profile_id:profile.id,tipo_dieta:p.preferenzaAlim,
-            allergie:p.allergie||[],cibi_esclusi:p.cibiEsclusi||[],n_pasti_giorno:p.pastiGiorno});
+            allergie:p.allergie||[],cibi_esclusi:p.cibiNonGraditi||'',n_pasti_giorno:p.pastiGiorno});
           S._sync6.prefHash=h2;
         }
       }catch(e){console.warn('[Corpora F6] sync profilo/preferenze fallito:',e);}

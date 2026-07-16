@@ -111,6 +111,24 @@ html,body{height:100%;overflow:hidden;background:#1a1a2e;font-family:'IBM Plex S
 .empty-ico{font-size:52px;margin-bottom:14px;opacity:.5}
 .empty-txt{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.5px;line-height:1.9;opacity:.7}
 
+/* ═════ ADHERENCE BADGE (Sezione 9 — design system) ═════ */
+.adh-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:99px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;border:1.5px solid transparent}
+.adh-badge.good{background:var(--greenl);color:var(--greend);border-color:rgba(22,163,74,.25)}
+.adh-badge.mid{background:#fef3c7;color:#92400e;border-color:rgba(217,119,6,.25)}
+.adh-badge.low{background:#fee2e2;color:#991b1b;border-color:rgba(220,38,38,.25)}
+.adh-badge .adh-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+/* ═════ CALENDAR HEATMAP (streak) — Sezione 9 ═════ */
+.heatmap-wrap{padding:4px 2px}
+.heatmap-grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,1fr);gap:3px;overflow-x:auto;padding-bottom:4px}
+.heatmap-cell{width:13px;height:13px;border-radius:3px;background:#ede8dc;flex-shrink:0}
+.heatmap-cell.l1{background:#bbf0cd}
+.heatmap-cell.l2{background:#7ee2a0}
+.heatmap-cell.l3{background:#34c95f}
+.heatmap-cell.l4{background:#16a34a}
+.heatmap-legend{display:flex;align-items:center;gap:4px;justify-content:flex-end;margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink3)}
+.heatmap-legend .heatmap-cell{width:10px;height:10px}
+
 /* ══ KCAL RING (home day strip) ══ */
 @keyframes ring-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 @keyframes ring-celebrate{0%{transform:scale(1) rotate(0deg)}25%{transform:scale(1.12) rotate(-3deg)}75%{transform:scale(1.12) rotate(3deg)}100%{transform:scale(1) rotate(0deg)}}
