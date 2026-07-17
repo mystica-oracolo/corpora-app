@@ -63,6 +63,31 @@ Aggiunta voce "Foto Progressi" nel menu ALTRO (wrap non invasivo di `showMoreMen
 pattern di Fase 8/13). File registrato in `index.html` e nel precache di `sw.js`
 (CACHE_VERSION bump a `corpora-v3`, da pubblicare seguendo la regola di deploy in `sw.js`).
 
+## Fase 16 — Tracking micronutrienti, motore+UI (fase16-micronutrienti.js)
+Costruito il motore e la dashboard **prima** dei dati (scelta esplicita): il database
+alimenti (`DB`, 853 voci) ha oggi solo kcal/macro/fibre/sodio, zero vitamine/minerali.
+Popolare valori non verificati per centinaia di alimenti avrebbe rischiato di mostrare
+numeri sbagliati spacciati per precisi — peggio di non mostrarli.
+
+Cosa c'è:
+- `MICRO_DEFS`: 17 vitamine/minerali con NRV UE standard adulti (stessi valori di
+  riferimento stampati per legge sulle etichette alimentari, Reg. UE 1169/2011) — dato
+  informativo generico, non calibrato su profilo/età/sesso, con disclaimer in UI.
+- `microTotalsFor()` / `getMicroToday()` / `getMicroForDate()`: aggregano i micronutrienti
+  dei pasti registrati, MA tracciano separatamente quanti grammi di cibo consumato avevano
+  davvero il dato disponibile (`coveredGrams`) — un nutriente senza dati mostra "N/D",
+  mai uno zero che farebbe credere a una carenza inesistente.
+- `microDbCoverage()`: quanti alimenti su 853 hanno già almeno un valore — indicatore di
+  avanzamento del popolamento dati, visibile in fondo alla dashboard.
+- Dashboard `showMicronutrienti()` + voce "🧬 Micronutrienti" nel menu ALTRO.
+
+**Come aggiungere i dati in futuro — nessuna modifica di codice richiesta**: basta
+aggiungere ai singoli oggetti di `DB` in app.js i campi con questi nomi esatti (per 100g):
+`vitA, vitD, vitE, vitC, vitB1, vitB2, vitB3, vitB6, folato, vitB12, calcio, ferro,
+magnesio, zinco, potassio, iodio, selenio`. Il motore li rileva da solo via `typeof==='number'`.
+Prossimo passo (da discutere): popolare un sottoinsieme curato di alimenti principali con
+dati affidabili, lasciando "N/D" sul resto finché non verificati.
+
 ## Sezioni blueprint 15-17 (Roadmap, Stack tecnico, Prompt finale)
 Sono documentazione strategica, non richiedono implementazione — restano come da
 Corpora-Blueprint-Prodotto-1.md.
