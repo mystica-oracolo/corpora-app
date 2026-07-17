@@ -2412,42 +2412,38 @@ function showHome(fromBack,keepScroll){
     const items=S.meals[k]||[];
     const kk=Math.round(items.reduce((a,it)=>a+it.food.e*it.g/100,0));
     const mealPct=Math.min(100,Math.round(kk/(S.settings.kcal/5)*100));
-    return`<div class="meal-btn ${m.cls}" onclick="snd();navPush(()=>showMeal('${k}'))">
-      <div class="meal-ico">${m.ico}</div>
+    return`<div class="meal-btn ${m.cls}" data-ico="${m.ico}" onclick="snd();navPush(()=>showMeal('${k}'))">
       <div class="meal-lbl">${m.label}</div>
-      <div class="meal-kk" style="color:${m.color}">${kk?kk+' kcal':'+ aggiungi'}</div>
+      <div class="meal-kk">${kk?kk+' kcal':'+ aggiungi'}</div>
       <div class="meal-n">${items.length?items.length+' alim.':'tocca per aggiungere'}</div>
-      <div style="width:100%;height:3px;background:rgba(0,0,0,.1);border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${mealPct}%;background:${m.color};border-radius:2px;transition:width .5s"></div></div>
+      <div style="width:100%;height:4px;background:rgba(255,255,255,.22);border-radius:3px;margin-top:8px;overflow:hidden"><div style="height:100%;width:${mealPct}%;background:#fff;border-radius:3px;transition:width .5s"></div></div>
     </div>`;
   }).join('');
 
   // Icona Esercizi
   const exeKcal=burned;
-  const exeIcon=`<div class="meal-btn exe" onclick="snd();bnavGo(showWorkout,'workout')">
-    <div class="meal-ico">💪</div>
+  const exeIcon=`<div class="meal-btn exe" data-ico="💪" onclick="snd();bnavGo(showWorkout,'workout')">
     <div class="meal-lbl">Esercizi</div>
-    <div class="meal-kk" style="color:#10b981">${exeKcal?'−'+exeKcal+' kcal':'+ allena'}</div>
+    <div class="meal-kk">${exeKcal?'−'+exeKcal+' kcal':'+ allena'}</div>
     <div class="meal-n">${wos.length?wos.length+(wos.length===1?' attività':' attività'):'nessuna oggi'}</div>
-    <div style="width:100%;height:3px;background:rgba(0,0,0,.1);border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${Math.min(100,wos.length*25)}%;background:#10b981;border-radius:2px;transition:width .5s"></div></div>
+    <div style="width:100%;height:4px;background:rgba(255,255,255,.22);border-radius:3px;margin-top:8px;overflow:hidden"><div style="height:100%;width:${Math.min(100,wos.length*25)}%;background:#fff;border-radius:3px;transition:width .5s"></div></div>
   </div>`;
 
   // Icona Il Mio Peso
-  const pesoIcon=`<div class="meal-btn pes" onclick="snd();navPush(showDiarioPeso)">
-    <div class="meal-ico">⚖️</div>
+  const pesoIcon=`<div class="meal-btn pes" data-ico="⚖️" onclick="snd();navPush(showDiarioPeso)">
     <div class="meal-lbl">Il Mio Peso</div>
-    <div class="meal-kk" style="color:#0ea5e9">${lastPeso?.peso?lastPeso.peso+' kg':'— kg'}</div>
+    <div class="meal-kk">${lastPeso?.peso?lastPeso.peso+' kg':'— kg'}</div>
     <div class="meal-n">${S.profile.entries?.some(e=>e.date===TODAY)?'aggiornato oggi':'tocca per misurare'}</div>
-    <div style="width:100%;height:3px;background:rgba(0,0,0,.1);border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${S.profile.entries?.some(e=>e.date===TODAY)?100:20}%;background:#0ea5e9;border-radius:2px"></div></div>
+    <div style="width:100%;height:4px;background:rgba(255,255,255,.22);border-radius:3px;margin-top:8px;overflow:hidden"><div style="height:100%;width:${S.profile.entries?.some(e=>e.date===TODAY)?100:20}%;background:#fff;border-radius:3px"></div></div>
   </div>`;
 
   // Icona Acqua (con bottone + inline)
-  const acquaIcon=`<div class="meal-btn acq" style="position:relative" onclick="snd();showAcquaDetail()">
-    <div class="meal-ico">💧</div>
+  const acquaIcon=`<div class="meal-btn acq" data-ico="💧" style="position:relative" onclick="snd();showAcquaDetail()">
     <div class="meal-lbl">Acqua</div>
-    <div class="meal-kk" style="color:#3b82f6">${S.water}/${waterGoal} bicch.</div>
+    <div class="meal-kk">${S.water}/${waterGoal} bicch.</div>
     <div class="meal-n">${S.water*250} ml assunti</div>
-    <div style="width:100%;height:3px;background:rgba(0,0,0,.1);border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${Math.min(100,Math.round(S.water/waterGoal*100))}%;background:#3b82f6;border-radius:2px;transition:width .5s"></div></div>
-    <button onclick="event.stopPropagation();snd();S.water=Math.min(${waterGoal}+4,S.water+1);saveState();showHome(false,true);" style="position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:#3b82f6;color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(59,130,246,.4)">+</button>
+    <div style="width:100%;height:4px;background:rgba(255,255,255,.22);border-radius:3px;margin-top:8px;overflow:hidden"><div style="height:100%;width:${Math.min(100,Math.round(S.water/waterGoal*100))}%;background:#fff;border-radius:3px;transition:width .5s"></div></div>
+    <button onclick="event.stopPropagation();snd();S.water=Math.min(${waterGoal}+4,S.water+1);saveState();showHome(false,true);" style="position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.25);backdrop-filter:blur(4px);color:#fff;border:none;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2">+</button>
   </div>`;
 
   // Feedback giornaliero
@@ -2516,11 +2512,13 @@ function showHome(fromBack,keepScroll){
   </div>
 
   <!-- 8 ICONE PRINCIPALI -->
-  <div class="meal-grid" style="padding:10px 10px 4px">
-    ${mealIcons}
-    ${exeIcon}
-    ${pesoIcon}
-    ${acquaIcon}
+  <div class="home-dash">
+    <div class="meal-grid">
+      ${mealIcons}
+      ${exeIcon}
+      ${pesoIcon}
+      ${acquaIcon}
+    </div>
   </div>
 
   <!-- TOTALE GIORNALIERO -->

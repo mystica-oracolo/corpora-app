@@ -319,23 +319,26 @@ mark{background:#fef3c7;color:var(--ink);border-radius:2px;padding:0 1px;}
 .ico-profilo .nk-ico-wrap{background:linear-gradient(135deg,#c084fc,#7c3aed)}
 .ico-setting .nk-ico-wrap{background:linear-gradient(135deg,#94a3b8,#1a1a2e)}
 
-/* MEAL */
-.meal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
-.meal-btn{border-radius:var(--rk);padding:16px 10px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:transform .1s;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.meal-btn:active{transform:scale(.95)}
-.meal-btn.col{background:linear-gradient(160deg,#fff8e7,#fef3c7);border:1.5px solid #f59e0b}
-.meal-btn.pran{background:linear-gradient(160deg,#f0fdf4,#dcfce7);border:1.5px solid #22c55e}
-.meal-btn.cena{background:linear-gradient(160deg,#eff6ff,#dbeafe);border:1.5px solid #3b82f6}
-.meal-btn.mer{background:linear-gradient(160deg,#fff1f2,#ffe4e6);border:1.5px solid #ef4444}
-.meal-btn.spu{background:linear-gradient(160deg,#fffbeb,#fef3c7);border:1.5px solid #f59e0b}
-.meal-btn.exe{background:linear-gradient(160deg,#ecfdf5,#d1fae5);border:1.5px solid #10b981}
-.meal-btn.pes{background:linear-gradient(160deg,#f0f9ff,#e0f2fe);border:1.5px solid #0ea5e9}
-.meal-btn.acq{background:linear-gradient(160deg,#eff6ff,#dbeafe);border:1.5px solid #3b82f6}
-.meal-btn .meal-ico{font-size:30px;line-height:1}
-.meal-btn .meal-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--ink);text-align:center;line-height:1.2}
-.meal-btn .meal-kk{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;text-align:center}
-.meal-btn .meal-n{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink3);text-align:center}
-.page-hero{background:var(--ink);color:#fff;padding:14px 16px 16px;flex-shrink:0}
+/* MEAL — stile a blocchi gradiente (ispirato Samsung Health) */
+.home-dash{background:var(--ink);padding:2px 10px 18px}
+.meal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 2px 4px}
+.meal-btn{position:relative;overflow:hidden;border-radius:20px;padding:16px 14px 14px;display:flex;flex-direction:column;justify-content:flex-end;min-height:112px;cursor:pointer;transition:transform .1s;box-shadow:0 6px 16px rgba(0,0,0,.28)}
+.meal-btn:active{transform:scale(.96)}
+.meal-btn.col{background:linear-gradient(150deg,#7c4a12,#d97706)}
+.meal-btn.spu{background:linear-gradient(150deg,#9a3412,#f59e0b)}
+.meal-btn.pran{background:linear-gradient(150deg,#14532d,#22c55e)}
+.meal-btn.mer{background:linear-gradient(150deg,#7f1d1d,#f43f5e)}
+.meal-btn.cena{background:linear-gradient(150deg,#312e81,#6366f1)}
+.meal-btn.exe{background:linear-gradient(150deg,#065f46,#10b981)}
+.meal-btn.pes{background:linear-gradient(150deg,#0c4a6e,#0ea5e9)}
+.meal-btn.acq{background:linear-gradient(150deg,#1e3a8a,#3b82f6)}
+.meal-btn::before{content:attr(data-ico);position:absolute;top:-8px;right:-6px;font-size:64px;line-height:1;opacity:.16;pointer-events:none}
+.meal-btn .meal-ico{display:none}
+.meal-btn .meal-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.8);text-align:left;line-height:1.2;position:relative;z-index:1}
+.meal-btn .meal-kk{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;text-align:left;color:#fff;margin-top:4px;position:relative;z-index:1}
+.meal-btn .meal-n{font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(255,255,255,.6);text-align:left;margin-top:2px;position:relative;z-index:1}
+.meal-btn>div[style*="border-radius:2px"]{background:rgba(255,255,255,.22)!important;position:relative;z-index:1}
+.page-hero{background:var(--ink);color:#fff;padding:14px 16px 10px;flex-shrink:0}
 .page-hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .page-time{font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.45;letter-spacing:.5px}
 .page-kcal-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
@@ -351,6 +354,7 @@ mark{background:#fef3c7;color:var(--ink);border-radius:2px;padding:0 1px;}
 .meal-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink)}
 .meal-kk{font-size:14px;font-weight:700;font-family:'IBM Plex Mono',monospace}
 .meal-n{font-size:10px;color:var(--ink3);font-family:'IBM Plex Mono',monospace}
+
 
 /* FOOD LIST — sticky header, nessun flex su #screen */
 .srch-bar{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:2px solid var(--ink);padding:10px 12px;}
