@@ -1386,10 +1386,10 @@ function setHdr(title,sub,back){
   document.getElementById('back-btn').style.display=back?'flex':'none';
   // Bottom nav always visible
 }
-function resetScreen(){
+function resetScreen(keepScroll){
   const s=document.getElementById('screen');
   s.style.display='';s.style.flexDirection='';s.style.overflow='';
-  s.scrollTop=0;
+  if(!keepScroll)s.scrollTop=0;
   fabHide();
   // Always keep header progress bar current
   setTimeout(()=>{
@@ -2382,8 +2382,8 @@ function navGoHome(){
 }
 
 /* ════════ LA MIA PAGINA — HOME UNIFICATA ════════ */
-function showHome(fromBack){
-  resetScreen();
+function showHome(fromBack,keepScroll){
+  resetScreen(keepScroll);
   const now=new Date();
   const h=now.getHours();
   const greeting=h<12?'Buongiorno 🌅':h<17?'Buon pomeriggio ☀️':'Buonasera 🌙';
@@ -2447,7 +2447,7 @@ function showHome(fromBack){
     <div class="meal-kk" style="color:#3b82f6">${S.water}/${waterGoal} bicch.</div>
     <div class="meal-n">${S.water*250} ml assunti</div>
     <div style="width:100%;height:3px;background:rgba(0,0,0,.1);border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${Math.min(100,Math.round(S.water/waterGoal*100))}%;background:#3b82f6;border-radius:2px;transition:width .5s"></div></div>
-    <button onclick="event.stopPropagation();snd();S.water=Math.min(${waterGoal}+4,S.water+1);saveState();showHome();" style="position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:#3b82f6;color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(59,130,246,.4)">+</button>
+    <button onclick="event.stopPropagation();snd();S.water=Math.min(${waterGoal}+4,S.water+1);saveState();showHome(false,true);" style="position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:#3b82f6;color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(59,130,246,.4)">+</button>
   </div>`;
 
   // Feedback giornaliero
@@ -2567,8 +2567,8 @@ function showAcquaDetail(){
     </div>
     <div class="water-cups" style="justify-content:center;margin-bottom:16px">${Array.from({length:waterGoal},(_,i)=>`<div class="w-cup ${i<S.water?'filled':''}" onclick="snd();S.water=${i+1};saveState();document.getElementById('modal').querySelector('.modal-title').nextElementSibling.querySelector('div').textContent=${i+1};showAcquaDetail()">💧</div>`).join('')}</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <button class="conf-btn" onclick="snd();S.water=Math.max(0,S.water-1);saveState();closeModal();showHome()">− Togli</button>
-      <button class="conf-btn green-btn" onclick="snd('confirm');S.water=Math.min(${waterGoal}+4,S.water+1);saveState();closeModal();showHome()">+ Bicchiere</button>
+      <button class="conf-btn" onclick="snd();S.water=Math.max(0,S.water-1);saveState();closeModal();showHome(false,true);">− Togli</button>
+      <button class="conf-btn green-btn" onclick="snd('confirm');S.water=Math.min(${waterGoal}+4,S.water+1);saveState();closeModal();showHome(false,true);">+ Bicchiere</button>
     </div>`;
   document.getElementById('modal').classList.add('open');
 }
