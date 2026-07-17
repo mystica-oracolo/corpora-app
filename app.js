@@ -1169,7 +1169,7 @@ function showAvatarMenu(){
 }
 
 function showLogout(){
-  if(confirm('Esci da '+CUR.name+'? I dati rimangono salvati.')){
+  showConfirm('Esci da '+CUR.name+'? I dati rimangono salvati.',function(){
     saveState();CUR=null;
     try{localStorage.removeItem(CKEY);}catch{}
     const appWrap=document.getElementById('app-wrap');
@@ -1184,7 +1184,7 @@ function showLogout(){
     const lp=document.getElementById('l-profiles');
     const lo=document.getElementById('l-or');
     if(lp&&Object.keys(getProfiles()).length>0){lp.style.display='block';if(lo)lo.style.display='flex';}
-  }
+  },{title:'Uscire?',icon:'🚪'});
 }
 
 // Auto-login: aspetta DOM
@@ -1987,8 +1987,8 @@ function showAddCustomFood(){
 function saveCustomFood(){
   const name=(document.getElementById('cf-name').value||'').trim();
   const e=parseFloat(document.getElementById('cf-e').value);
-  if(!name){alert('Inserisci il nome');return;}
-  if(!e||e<=0){alert('Inserisci le calorie');return;}
+  if(!name){showToast('⚠️ Inserisci il nome','red');return;}
+  if(!e||e<=0){showToast('⚠️ Inserisci le calorie','red');return;}
   if(!S.customFoods)S.customFoods=[];
   const id=9000+S.customFoods.length+1;
   const food={id,name,cat:document.getElementById('cf-cat').value||'Personalizzati',e,p:parseFloat(document.getElementById('cf-p').value)||0,c:parseFloat(document.getElementById('cf-c').value)||0,f:parseFloat(document.getElementById('cf-f').value)||0,fi:parseFloat(document.getElementById('cf-fi').value)||0,s:0,sa:0,na:0,emoji:'🍽',custom:true};
@@ -2091,7 +2091,7 @@ function confirmIngredient(foodId,ri){
   S.recipes[ri].ingredients.push({foodId,g});saveState();closeModal();editRicetta(ri);
 }
 function rmIngredient(ri,j){S.recipes[ri].ingredients.splice(j,1);saveState();editRicetta(ri);}
-function delRicetta(i){if(confirm('Elimina ricetta?')){S.recipes.splice(i,1);saveState();navReplace(showRicette);}}
+function delRicetta(i){showConfirm('Eliminare questa ricetta?',function(){S.recipes.splice(i,1);saveState();navReplace(showRicette);},{danger:true,confirmLabel:'Elimina'});}
 function addRicettaToDiary(i){
   const r=S.recipes[i];
   const opts=MK.map(k=>`<option value="${k}">${MM[k].ico} ${MM[k].label}</option>`).join('');
@@ -2279,7 +2279,7 @@ function renderPesoObiettivo(){
 }
 function setPesoTarget(){
   const v=parseFloat(document.getElementById('pt-val').value);
-  if(!v||v<30||v>300){alert('Peso non valido');return;}
+  if(!v||v<30||v>300){showToast('⚠️ Peso non valido','red');return;}
   S.settings.pesoTarget=v;saveState();renderProfilo();
 }
 
@@ -2898,15 +2898,17 @@ function renderPiano(){
   document.getElementById('screen').innerHTML=html;
 }
 function applyDietPlan(key){
-  if(!confirm('Applica il piano '+DIET_PLANS[key].label+' a questo giorno?'))return;
-  const plan=getPlan(_pd);const tmpl=DIET_PLANS[key].days;
-  MK.forEach(k=>{plan[k]=[...(tmpl[k]||[])];});saveState();renderPiano();
+  showConfirm('Applica il piano '+DIET_PLANS[key].label+' a questo giorno?',function(){
+    const plan=getPlan(_pd);const tmpl=DIET_PLANS[key].days;
+    MK.forEach(k=>{plan[k]=[...(tmpl[k]||[])];});saveState();renderPiano();
+  });
 }
 function copyDayToDiary(){
-  if(!confirm('Copia il piano di '+fmtDate(_pd)+' nel diario di OGGI?'))return;
-  const plan=getPlan(_pd);
-  MK.forEach(k=>{(plan[k]||[]).forEach(it=>{const fd=getDB().find(x=>x.id===it.foodId);if(fd){if(!S.meals[k])S.meals[k]=[];S.meals[k].push({food:fd,g:it.g});}});});
-  saveState();showToast('✅ Piano copiato!','green');
+  showConfirm('Copiare il piano di '+fmtDate(_pd)+' nel diario di OGGI?',function(){
+    const plan=getPlan(_pd);
+    MK.forEach(k=>{(plan[k]||[]).forEach(it=>{const fd=getDB().find(x=>x.id===it.foodId);if(fd){if(!S.meals[k])S.meals[k]=[];S.meals[k].push({food:fd,g:it.g});}});});
+    saveState();showToast('✅ Piano copiato!','green');
+  });
 }
 function getPlan(d){if(!S.calPlans[d])S.calPlans[d]={colazione:[],pranzo:[],cena:[],merenda:[],note:''};return S.calPlans[d];}
 function planTot(d){const p=getPlan(d);let t={e:0,p:0,c:0,f:0};MK.forEach(k=>(p[k]||[]).forEach(it=>{const fd=getDB().find(x=>x.id===it.foodId);if(fd){const r=it.g/100;t.e+=fd.e*r;t.p+=fd.p*r;t.c+=fd.c*r;t.f+=fd.f*r;}}));return{e:Math.round(t.e),p:+(t.p.toFixed(1)),c:+(t.c.toFixed(1)),f:+(t.f.toFixed(1))};}
@@ -3548,7 +3550,7 @@ function saveEntry(){
   S.profile.entries.sort((a,b)=>a.date.localeCompare(b.date));
   saveState();showToast('✅ '+peso+'kg salvato!','green');renderProfilo();
 }
-function delEntry(i){if(confirm('Elimina questa misurazione?')){S.profile.entries.splice(i,1);saveState();showToast('🗑 Misurazione eliminata');renderProfilo();}}
+function delEntry(i){showConfirm('Eliminare questa misurazione?',function(){S.profile.entries.splice(i,1);saveState();showToast('🗑 Misurazione eliminata');renderProfilo();},{danger:true,confirmLabel:'Elimina'});}
 function applyTDEE(k){S.settings.kcal=k;saveState();showToast('✅ Obiettivo: '+k+' kcal','green');}
 
 /* ════════ IMPOSTAZIONI ════════ */
@@ -3601,19 +3603,19 @@ function renderImpostazioni(){
 function runTDEE(){
   const w=parseFloat(document.getElementById("tw").value),h=parseFloat(document.getElementById("th").value),a=parseFloat(document.getElementById("ta").value);
   const s=document.getElementById('ts').value,act=document.getElementById('tact').value;
-  if(!w||!h||!a){alert('Compila tutti i campi');return;}
+  if(!w||!h||!a){showToast('⚠️ Compila tutti i campi','red');return;}
   const bmr=s==='m'?10*w+6.25*h-5*a+5:10*w+6.25*h-5*a-161;
   const f={sedentario:1.2,leggera:1.375,moderata:1.55,intensa:1.725,estrema:1.9};
   const tdee=Math.round(bmr*(f[act]||1.55));
   const res=document.getElementById('tres');res.style.display='block';
   res.innerHTML=`BMR: ${Math.round(bmr)} kcal/gg<br>TDEE: <b>${tdee}</b> kcal/gg<br>Dimagrimento: ${tdee-500}<br>Mantenimento: ${tdee}<br>Massa +300: ${tdee+300}<br><button class="big-btn success" onclick="snd('confirm');applyTDEE(${tdee})" style="margin:10px 0 0">APPLICA TDEE</button>`;
 }
-function resetDay(){if(confirm('Azzera il diario di oggi?')){S.meals={colazione:[],spuntino:[],pranzo:[],merenda:[],cena:[]};saveState();navGoHome();}}
+function resetDay(){showConfirm('Azzerare il diario di oggi?',function(){S.meals={colazione:[],spuntino:[],pranzo:[],merenda:[],cena:[]};saveState();navGoHome();},{danger:true,confirmLabel:'Azzera'});}
 function exportData(){
   try{
     const blob=new Blob([JSON.stringify({nutritrack:true,version:10,slug:CUR.slug,data:S,exported:new Date().toISOString()})],{type:'application/json'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`nutritrack_backup_${TODAY}.json`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
-  }catch(e){alert('Errore esportazione: '+e.message);}
+  }catch(e){showToast('❌ Errore esportazione: '+e.message,'red');}
 }
 function importData(){document.getElementById('importFile').click();}
 function doImport(input){
@@ -3622,11 +3624,12 @@ function doImport(input){
   reader.onload=e=>{
     try{
       const d=JSON.parse(e.target.result);
-      if(!d.nutritrack){alert('File non valido');return;}
-      if(!confirm('Importa il backup? Sovrascriverà i dati attuali.'))return;
-      if(d.data.meals)S.meals=d.data.meals;if(d.data.profile)S.profile=d.data.profile;if(d.data.settings)S.settings=d.data.settings;if(d.data.workouts)S.workouts=d.data.workouts;if(d.data.calPlans)S.calPlans=d.data.calPlans;if(typeof d.data.water==='number')S.water=d.data.water;
-      saveState();showToast('✅ Backup importato!','green');navGoHome();
-    }catch(err){alert('Errore importazione: '+err.message);}
+      if(!d.nutritrack){showToast('❌ File non valido','red');return;}
+      showConfirm('Importare il backup? Sovrascriverà i dati attuali.',function(){
+        if(d.data.meals)S.meals=d.data.meals;if(d.data.profile)S.profile=d.data.profile;if(d.data.settings)S.settings=d.data.settings;if(d.data.workouts)S.workouts=d.data.workouts;if(d.data.calPlans)S.calPlans=d.data.calPlans;if(typeof d.data.water==='number')S.water=d.data.water;
+        saveState();showToast('✅ Backup importato!','green');navGoHome();
+      },{title:'Importa backup',danger:true,confirmLabel:'Importa'});
+    }catch(err){showToast('❌ Errore importazione: '+err.message,'red');}
   };
   reader.readAsText(file);input.value='';
 }
@@ -3636,8 +3639,8 @@ function doImport(input){
 function saveSupabaseConfig(){
   const url=(document.getElementById('sb-url')?.value||'').trim();
   const key=(document.getElementById('sb-key')?.value||'').trim();
-  if(!url||!key){alert('Inserisci URL e API Key');return;}
-  if(!url.startsWith('https://')){alert('URL non valido - deve iniziare con https://');return;}
+  if(!url||!key){showToast('⚠️ Inserisci URL e API Key','red');return;}
+  if(!url.startsWith('https://')){showToast('⚠️ URL non valido - deve iniziare con https://','red');return;}
   initSupabase(url,key);
   // Testa connessione
   sbRequest('GET','nutritrack_data?limit=1').then(r=>{
@@ -3646,19 +3649,20 @@ function saveSupabaseConfig(){
       saveState(); // prima sync
       renderImpostazioni();
     } else {
-      alert('❌ Connessione fallita.\nVerifica URL e API Key.\nAssicurati di aver creato la tabella con lo script SQL.');
+      showInfoModal('Connessione fallita','Verifica URL e API Key. Assicurati di aver creato la tabella con lo script SQL.','❌');
       SB.enabled=false;
     }
-  }).catch(()=>alert('❌ Errore di rete. Controlla URL.'));
+  }).catch(()=>showInfoModal('Errore di rete','Controlla l\'URL e la connessione internet.','❌'));
 }
 
 function disableSupabase(){
-  if(!confirm('Disattivare la sincronizzazione Supabase?'))return;
-  SB.url=null;SB.key=null;SB.enabled=false;
-  try{localStorage.removeItem('nt_sb_url');localStorage.removeItem('nt_sb_key');}catch(e){}
-  updateSyncStatus();
-  renderImpostazioni();
-  alert('Sync disattivato. I dati locali sono intatti.');
+  showConfirm('Disattivare la sincronizzazione Supabase?',function(){
+    SB.url=null;SB.key=null;SB.enabled=false;
+    try{localStorage.removeItem('nt_sb_url');localStorage.removeItem('nt_sb_key');}catch(e){}
+    updateSyncStatus();
+    renderImpostazioni();
+    showToast('Sync disattivato. I dati locali sono intatti.');
+  });
 }
 
 function renderImpostazioniSbStatus(){
@@ -3763,7 +3767,7 @@ function editCustomFood(i){
 function saveEditCustomFood(i){
   const name=(document.getElementById('ef-name').value||'').trim();
   const e=parseFloat(document.getElementById('ef-e').value);
-  if(!name||!e){alert('Nome e calorie obbligatori');return;}
+  if(!name||!e){showToast('⚠️ Nome e calorie obbligatori','red');return;}
   if(!S.customFoods)S.customFoods=[];
   S.customFoods[i]={
     ...S.customFoods[i],
@@ -3779,9 +3783,10 @@ function saveEditCustomFood(i){
 }
 
 function delCustomFood(i){
-  if(!confirm('Eliminare questo alimento personalizzato?'))return;
-  S.customFoods.splice(i,1);
-  saveState();navReplace(showMieiAlimenti);
+  showConfirm('Eliminare questo alimento personalizzato?',function(){
+    S.customFoods.splice(i,1);
+    saveState();navReplace(showMieiAlimenti);
+  },{danger:true,confirmLabel:'Elimina'});
 }
 
 /* ════════ INSTALL GUIDE ════════ */
@@ -3807,14 +3812,14 @@ function renderInstallModal(os){
       <div class="os-tab ${os==='desktop'?'on':''}" onclick="snd();renderInstallModal('desktop')">💻 PC</div>
     </div>
     <div style="background:var(--greenl);border:1px solid #86efac;border-radius:var(--r);padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--greend);margin-bottom:12px">
-      ✅ Su <b>GitHub Pages (HTTPS)</b> tutti i dati vengono salvati permanentemente nel browser, e da Fase 10 l'app funziona anche offline grazie al Service Worker.
+      ✅ Su <b>GitHub Pages (HTTPS)</b> tutti i dati vengono salvati permanentemente nel browser. Da file locale potrebbe azzerarsi ad ogni apertura.
     </div>
     ${steps.map(([n,t,s])=>`<div class="install-step"><div class="install-num">${n}</div><div class="install-text">${t}${s?`<small>${s}</small>`:''}</div></div>`).join('')}
     <button class="conf-btn" onclick="closeModal()">✓ HO CAPITO</button>`;
 }
 
 /* ════════ PWA ════════ */
-/* ══ PWA MANIFEST + SERVICE WORKER (Fase 10 — offline reale) ══ */
+/* ══ PWA MANIFEST (senza Service Worker per compatibilità GitHub Pages) ══ */
 (function setupPWA(){
   try{
     function mkIcon(sz){
@@ -3849,13 +3854,11 @@ function renderInstallModal(os){
       const blob=new Blob([JSON.stringify(mf)],{type:'application/manifest+json'});
       mel.href=URL.createObjectURL(blob);
     }
-    // Registra il Service Worker (sw.js) — strategia network-first su
-    // HTML/JS: mai serve codice vecchio se la rete risponde, quindi non
-    // può ripresentarsi il bug schermo bianco da cache congelata.
+    // Deregistra eventuali service worker precedenti che causano schermo bianco
     if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('./sw.js').catch(function(e){
-        console.warn('[NT] SW registration error:',e);
-      });
+      navigator.serviceWorker.getRegistrations().then(function(regs){
+        regs.forEach(function(r){r.unregister();});
+      }).catch(function(){});
     }
   }catch(e){console.warn('[NT] PWA setup error:',e);}
 })();

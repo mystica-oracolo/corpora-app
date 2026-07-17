@@ -430,20 +430,58 @@
       checkMilestones();
     };
 
-    // 10. Cancellazione account completa (locale) + 11. disclaimer in Impostazioni
+    // 10. Cancellazione account completa (locale + server) + 11. disclaimer in Impostazioni
     window.deleteAccount=function(){
       if(typeof CUR==='undefined'||!CUR){showToast('Nessun account attivo');return;}
-      if(!confirm(`Cancellare definitivamente l'account "${CUR.name}"? Questa azione elimina tutti i dati locali (diario, allenamenti, check-in, peso) e NON è reversibile.`))return;
-      if(!confirm('Confermi ancora una volta? I dati non potranno essere recuperati.'))return;
+      document.getElementById('modal-box').innerHTML=`
+        <div class="modal-handle"></div>
+        <div class="modal-title" style="color:var(--red)">🗑️ Cancellare l'account?</div>
+        <div style="padding:0 16px">
+          <div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px">
+            Elimina <b>definitivamente</b> l'account "<b>${CUR.name}</b>": diario, allenamenti, check-in, peso — inclusi i dati sincronizzati su server, se la sync è attiva. <b>Non è reversibile.</b>
+          </div>
+          <div style="font-size:10px;color:var(--ink3);font-family:'IBM Plex Mono',monospace;margin-bottom:6px">Scrivi ELIMINA per confermare</div>
+          <input id="del-confirm-inp" class="gram-inp" style="width:100%;margin-bottom:14px;text-transform:uppercase" placeholder="ELIMINA">
+        </div>
+        <div style="display:flex;gap:8px;padding:0 16px 16px">
+          <button class="big-btn outline" style="margin:0;flex:1" onclick="snd();closeModal()">Annulla</button>
+          <button class="big-btn danger" style="margin:0;flex:1" onclick="confirmDeleteAccount()">Elimina</button>
+        </div>`;
+      document.getElementById('modal').classList.add('open');
+      setTimeout(()=>document.getElementById('del-confirm-inp')?.focus(),150);
+    };
+
+    window.confirmDeleteAccount=async function(){
+      const val=(document.getElementById('del-confirm-inp')?.value||'').trim().toUpperCase();
+      if(val!=='ELIMINA'){showToast('Scrivi ELIMINA per confermare');return;}
+      snd('delete');
+      const slug=CUR.slug;
+
+      // Pulizia server, best-effort: se la sync non è mai stata attivata
+      // (SB.enabled false) sbRequest ritorna null subito, nessun danno.
+      // Ogni tabella è isolata in try/catch propria: l'assenza di una
+      // (es. "subscriptions" se la Fase 9 non è ancora stata deployata)
+      // non deve bloccare la cancellazione delle altre.
+      if(typeof SB!=='undefined'&&SB.enabled){
+        const tabelle=['nutritrack_data','profiles','subscriptions'];
+        for(const t of tabelle){
+          try{await sbRequest('DELETE',t+'?slug=eq.'+encodeURIComponent(slug));}
+          catch(e){console.warn('[Corpora F8] Pulizia server fallita per',t,e);}
+        }
+      }
+
       try{
-        localStorage.removeItem(stateKey(CUR.slug));
+        localStorage.removeItem(stateKey(slug));
         const profiles=getProfiles();
-        delete profiles[CUR.slug];
+        delete profiles[slug];
         saveProfiles(profiles);
         localStorage.removeItem(CKEY);
-      }catch(e){console.warn('[Corpora F8] Errore cancellazione account:',e);}
+      }catch(e){console.warn('[Corpora F8] Errore cancellazione locale:',e);}
+
+      closeModal();
       showToast('Account cancellato');
       setTimeout(()=>location.reload(),600);
+
     };
 
     const _origRenderImpostazioni8=window.renderImpostazioni;

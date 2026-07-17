@@ -74,7 +74,7 @@
     }
     // chip piccolo (single o multi select)
     function chip(field,val,cur,lbl,multi){
-      const on=multi?(cur||[]).includes(val):cur===val;
+      const on=multi?(cur||[]).includes(val):cur==val;
       const fn=multi?`obToggleMulti('${field}','${val}')`:`obSetSingle('${field}','${val}')`;
       return `<button onclick="${fn}" style="padding:9px 13px;border:2px solid ${on?'var(--green)':'#e8e3d8'};background:${on?'var(--greenl)':'var(--card)'};border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--ink);cursor:pointer;transition:all .15s">${lbl}</button>`;
     }

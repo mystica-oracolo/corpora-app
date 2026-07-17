@@ -636,7 +636,7 @@
       const peso=parseFloat(document.getElementById('ci-peso').value);
       const vita=parseFloat(document.getElementById('ci-vita').value)||null;
       const energia=parseInt(document.getElementById('ci-energia').value);
-      if(!peso){alert('Inserisci almeno il peso');return;}
+      if(!peso){showToast('⚠️ Inserisci almeno il peso','red');return;}
       ensureProfileExt();
       S.checkins.push({date:new Date().toISOString(),peso,vita,energia});
       if(!S.profile.entries)S.profile.entries=[];
@@ -1263,7 +1263,7 @@
           </div>
           <input type="file" id="gf-file" accept=".json" style="margin-top:10px;font-size:11px">
           <button class="big-btn" style="margin-top:8px" onclick="snd();importGoogleFitFile()">IMPORTA JSON TAKEOUT</button>
-          <button class="big-btn" style="margin-top:8px;opacity:.6" onclick="snd();alert('Sync live richiede: 1) progetto su console.cloud.google.com, 2) OAuth client ID configurato con i tuoi redirect URI, 3) consenso Fitness API. Non attivabile senza queste credenziali — questo pulsante è un placeholder.')">🔌 COLLEGA GOOGLE FIT (LIVE — richiede setup)</button>
+          <button class="big-btn" style="margin-top:8px;opacity:.6" onclick="snd();showInfoModal('Google Fit — sync live','Richiede: 1) un progetto su console.cloud.google.com, 2) un OAuth client ID configurato con i tuoi redirect URI, 3) consenso Fitness API. Non attivabile senza queste credenziali — questo pulsante è un placeholder.','🔌')">🔌 COLLEGA GOOGLE FIT (LIVE — richiede setup)</button>
         </div>
         <div class="card"><div class="card-hdr">📋 IMPORT RECENTI</div>
           <div class="card-body" id="wearable-import-log" style="font-size:11px;color:var(--ink2)">
@@ -1275,7 +1275,7 @@
     window.importAppleHealthFile=function(){
       const input=document.getElementById('ah-file');
       const file=input.files[0];
-      if(!file){alert('Seleziona il file export.xml');return;}
+      if(!file){showToast('⚠️ Seleziona il file export.xml','red');return;}
       const reader=new FileReader();
       reader.onload=e=>{
         try{
@@ -1290,7 +1290,7 @@
           saveState();
           showToast(`✅ Importati ${weights.length} pesi, ${Object.keys(steps).length} giorni di passi`);
           showWearableImport();
-        }catch(err){alert('Errore lettura file: '+err.message+'\\nVerifica che sia il file export.xml corretto.');}
+        }catch(err){showToast('❌ Errore lettura file: '+err.message+' — verifica che sia il file export.xml corretto.','red');}
       };
       reader.readAsText(file);
     };
@@ -1298,7 +1298,7 @@
     window.importGoogleFitFile=function(){
       const input=document.getElementById('gf-file');
       const file=input.files[0];
-      if(!file){alert('Seleziona il file JSON di Google Takeout');return;}
+      if(!file){showToast('⚠️ Seleziona il file JSON di Google Takeout','red');return;}
       const reader=new FileReader();
       reader.onload=e=>{
         try{
@@ -1309,7 +1309,7 @@
           saveState();
           showToast(`✅ Importati ${Object.keys(steps).length} giorni di passi`);
           showWearableImport();
-        }catch(err){alert('Errore lettura file: '+err.message);}
+        }catch(err){showToast('❌ Errore lettura file: '+err.message,'red');}
       };
       reader.readAsText(file);
     };
