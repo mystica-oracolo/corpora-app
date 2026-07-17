@@ -2955,7 +2955,7 @@ function renderWo(){
   const totBurned=wos.reduce((a,w)=>a+calcBurnedKcal(w.type,w.duration,null,w.sets,w.reps,w.load),0);
   const totMin=wos.reduce((a,w)=>a+(parseFloat(w.duration)||0),0);
   let html=`
-  <div style="background:var(--ink);color:#fff;padding:14px 16px 12px">
+  <div style="background:var(--ink);color:#fff;padding:14px 16px 4px">
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
       <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#f87171,#dc2626);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🏋️</div>
       <div>
@@ -2963,16 +2963,18 @@ function renderWo(){
         <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.45;margin-top:2px">${wos.length} allenamenti · ${totMin} minuti totali</div>
       </div>
     </div>
-    <button onclick="snd();addWoModal()" style="width:100%;padding:12px;background:var(--green);border:none;border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:#fff;letter-spacing:.8px;cursor:pointer;text-transform:uppercase">+ Aggiungi Allenamento</button>
+    <button onclick="snd();addWoModal()" style="width:100%;padding:12px;background:var(--green);border:none;border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:#fff;letter-spacing:.8px;cursor:pointer;text-transform:uppercase;margin-bottom:14px">+ Aggiungi Allenamento</button>
   </div>
-  <div style="padding:8px 12px 4px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--ink3);background:var(--paper);text-transform:uppercase">Strumenti Palestra</div>
-  <div class="wo-quick-grid">
-    <div class="wo-quick-btn" onclick="snd();navPush(showLibreriaEsercizi)"><div class="wo-quick-ico-wrap" style="background:linear-gradient(135deg,#f87171,#dc2626)">💪</div><div class="wo-quick-lbl">Libreria<br>Esercizi</div></div>
-    <div class="wo-quick-btn" onclick="snd();navPush(showSchede)"><div class="wo-quick-ico-wrap" style="background:linear-gradient(135deg,#60a5fa,#2563eb)">📋</div><div class="wo-quick-lbl">Schede<br>Allenamento</div></div>
-    <div class="wo-quick-btn" onclick="snd();navPush(showMuscleGroups)"><div class="wo-quick-ico-wrap" style="background:linear-gradient(135deg,#c084fc,#7c3aed)">🫀</div><div class="wo-quick-lbl">Muscoli<br>&amp; Anatomia</div></div>
-    <div class="wo-quick-btn" onclick="snd();navPush(showWorkoutStorico)"><div class="wo-quick-ico-wrap" style="background:linear-gradient(135deg,#94a3b8,#1a1a2e)">📜</div><div class="wo-quick-lbl">Storico<br>Workout</div></div>
+  <div class="home-dash">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.4);text-transform:uppercase;padding:6px 4px 8px">Strumenti Palestra</div>
+    <div class="meal-grid">
+      <div class="meal-btn mer" data-ico="💪" onclick="snd();navPush(showLibreriaEsercizi)" style="padding:18px 14px 14px;gap:0;align-items:flex-start;min-height:92px"><div class="meal-lbl" style="font-size:10.5px;font-weight:700;text-align:left">Libreria Esercizi</div></div>
+      <div class="meal-btn acq" data-ico="📋" onclick="snd();navPush(showSchede)" style="padding:18px 14px 14px;gap:0;align-items:flex-start;min-height:92px"><div class="meal-lbl" style="font-size:10.5px;font-weight:700;text-align:left">Schede Allenamento</div></div>
+      <div class="meal-btn mus" data-ico="🫀" onclick="snd();navPush(showMuscleGroups)" style="padding:18px 14px 14px;gap:0;align-items:flex-start;min-height:92px"><div class="meal-lbl" style="font-size:10.5px;font-weight:700;text-align:left">Muscoli &amp; Anatomia</div></div>
+      <div class="meal-btn sto" data-ico="📜" onclick="snd();navPush(showWorkoutStorico)" style="padding:18px 14px 14px;gap:0;align-items:flex-start;min-height:92px"><div class="meal-lbl" style="font-size:10.5px;font-weight:700;text-align:left">Storico Workout</div></div>
+    </div>
   </div>
-  <div style="padding:8px 14px 4px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--ink3);background:var(--paper);border-top:1px solid #ede8dc;text-transform:uppercase">Allenamenti di Oggi — ${new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'short'})}</div>`;
+  <div style="padding:12px 14px 4px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--ink3);background:var(--paper);text-transform:uppercase">Allenamenti di Oggi — ${new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'short'})}</div>`;
   if(!filtered.length)html+=`<div class="empty"><div class="empty-ico">🏋️</div><div class="empty-txt">NESSUN ALLENAMENTO<br>REGISTRATO</div></div>`;
   else filtered.forEach((w,i)=>{
     const burned=calcBurnedKcal(w.type,w.duration,null,w.sets,w.reps,w.load);
@@ -3926,10 +3928,9 @@ function showMoreMenu(fromBack){
       <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--ink3);text-transform:uppercase;margin-bottom:10px">MENU PRINCIPALE</div>
       <div class="meal-grid" style="padding:0">
         ${items.map(i=>`
-          <div class="meal-btn ${i.cls}" onclick="snd();${i.fn}" style="padding:16px 12px 14px;gap:6px">
-            <div class="meal-ico" style="font-size:28px">${i.ico}</div>
-            <div class="meal-lbl" style="font-size:10px;font-weight:700">${i.lbl}</div>
-            <div class="meal-n" style="font-size:9px;opacity:.7;line-height:1.3;text-align:center">${i.sub}</div>
+          <div class="meal-btn ${i.cls}" data-ico="${i.ico}" onclick="snd();${i.fn}" style="padding:18px 14px 14px;gap:0;align-items:flex-start;min-height:100px">
+            <div class="meal-lbl" style="font-size:10.5px;font-weight:700;text-align:left">${i.lbl}</div>
+            <div class="meal-n" style="font-size:9px;text-align:left;margin-top:4px">${i.sub}</div>
           </div>`).join('')}
       </div>
     </div>`;

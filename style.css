@@ -332,6 +332,8 @@ mark{background:#fef3c7;color:var(--ink);border-radius:2px;padding:0 1px;}
 .meal-btn.exe{background:linear-gradient(150deg,#065f46,#10b981)}
 .meal-btn.pes{background:linear-gradient(150deg,#0c4a6e,#0ea5e9)}
 .meal-btn.acq{background:linear-gradient(150deg,#1e3a8a,#3b82f6)}
+.meal-btn.mus{background:linear-gradient(150deg,#581c87,#a855f7)}
+.meal-btn.sto{background:linear-gradient(150deg,#1e293b,#64748b)}
 .meal-btn::before{content:attr(data-ico);position:absolute;top:-8px;right:-6px;font-size:64px;line-height:1;opacity:.16;pointer-events:none}
 .meal-btn .meal-ico{display:none}
 .meal-btn .meal-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.8);text-align:left;line-height:1.2;position:relative;z-index:1}
