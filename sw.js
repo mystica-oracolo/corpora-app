@@ -17,7 +17,7 @@
    ogni test — qui vale la stessa regola.
    ═══════════════════════════════════════════════════════════════ */
 
-const CACHE_VERSION = 'corpora-v2';
+const CACHE_VERSION = 'corpora-v3';
 const CACHE_NAME = `corpora-cache-${CACHE_VERSION}`;
 
 const PRECACHE_URLS = [
@@ -34,7 +34,8 @@ const PRECACHE_URLS = [
   './fase8-kpi-gamification-compliance.js',
   './fase14-ui-polish.js',
   './fase11-barcode.js',
-  './fase13-mia-scheda.js'
+  './fase13-mia-scheda.js',
+  './fase15-foto-progressi.js'
 ];
 
 /* ── INSTALL: precache dei file base ── */

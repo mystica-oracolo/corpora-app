@@ -47,6 +47,22 @@ versione precedente; nessuna funzione richiamata da `onclick`/`onchange` nell'HT
 risulta non esposta su `window`; ordine di caricamento script in `index.html` è sincrono
 (nessun `defer`/`async`), quindi l'ordine di risoluzione dei vari `whenReady()` è deterministico.
 
+## Fase 15 — Foto progressi nel tempo (fase15-foto-progressi.js)
+Galleria foto corpo datate (fronte/lato/retro) con peso e nota opzionali, dettaglio foto,
+eliminazione (via `showConfirm` di Fase 14, non `confirm()` nativo), e confronto prima/dopo
+tra due date qualsiasi (gated Premium, come il resto del paywall dell'app — free fino a 4 foto).
+
+Decisione tecnica: le immagini (compresse a ~900px JPEG via canvas) **non** entrano in `S`.
+`saveState()` serializza sempre l'intero `S` verso localStorage e, se configurato, verso
+Supabase (`sbSave` → `JSON.stringify(S)` ad ogni save) — foto in base64 dentro `S` avrebbero
+gonfiato entrambi oltre ogni limite ragionevole. Le immagini vivono quindi in un IndexedDB
+dedicato per profilo (`corpora_photos_<slug>`), mentre `S.progressPhotos` contiene solo il
+metadato leggero `{id, date, angle, peso, note}`.
+
+Aggiunta voce "Foto Progressi" nel menu ALTRO (wrap non invasivo di `showMoreMenu`, stesso
+pattern di Fase 8/13). File registrato in `index.html` e nel precache di `sw.js`
+(CACHE_VERSION bump a `corpora-v3`, da pubblicare seguendo la regola di deploy in `sw.js`).
+
 ## Sezioni blueprint 15-17 (Roadmap, Stack tecnico, Prompt finale)
 Sono documentazione strategica, non richiedono implementazione — restano come da
 Corpora-Blueprint-Prodotto-1.md.
